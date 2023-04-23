@@ -1,8 +1,13 @@
 require("dotenv").config();
-console.log(process.env.MONGODB_URI);
 module.exports = {
   port: process.env.PORT || 3001,
-  mongodbUri: process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/streetfood",
+  database: {
+    user: process.env.MONGODB_USER || "root",
+    password: process.env.MONGODB_PASSWORD || "1234",
+    host: process.env.MONGODB_HOST || "mongodb",
+    port: process.env.MONGODB_DOCKER_PORT || "27017",
+    name: process.env.MONGODB_DATABASE || "streetfood",
+  },
   firebase: {
       apiKey: process.env.FIREBASE_API_KEY,
       authDomain: process.env.FIREBASE_AUTH_DOMAIN,
