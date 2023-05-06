@@ -45,6 +45,7 @@ const controller = {
     try {
       req.validate();
       const param = { ...req.body };
+      const { shopId } = req.body;
       const order = await orderService.create(param);
       const menuOrderSerialized = await controller._serialize(shopId, [order]);
       res.success(menuOrderSerialized);
