@@ -1,10 +1,12 @@
 const _ = require("lodash");
-const Bill = require("../models/Bill");
-const { ErrorNotFound } = require("../configs/errors");
+const ObjectId = require("mongoose").Types.ObjectId;
+const { Bill, BillStatus } = require("../models/Bill");
+const { ErrorNotFound, ErrorForbidden } = require("../configs/errors");
 
 const service = {
   async query({
     shopId,
+    orderId,
     keyword,
     skip = 0,
     limit = 10,
@@ -13,6 +15,7 @@ const service = {
   }) {
     const filter = {
       shopId,
+      orderId,
       isActived: true,
     };
     if (!_.isNil(keyword)) {
@@ -26,10 +29,13 @@ const service = {
     return bills;
   },
 
-  async getById(id) {
+  async getById(shopId, id) {
+    if (!ObjectId.isValid(id)) {
+      throw ErrorNotFound("bill is not exists.");
+    }
     const bill = await Bill.findById(id).lean();
-    if (!bill || !bill.isActived) {
-      throw ErrorNotFound("menu is not exists.");
+    if (!bill || !bill.isActived || bill.shopId.toString() !== shopId) {
+      throw ErrorNotFound("bill is not exists.");
     }
     return bill;
   },
@@ -49,14 +55,16 @@ const service = {
     getOrderById,
     getMenuByIds,
     generatePromptpay,
-    inactiveOrder,
+    updateStatusOrder,
   }) {
-    const sequence = (await this.getLastSequence(shopId)) + 1;
-    const maxQueue = 100;
-    const prefixSequence = Math.floor(sequence / maxQueue) % 26;
-    const prefix = String.fromCharCode(65 + prefixSequence); // A=65 ... Z=90
-    const name = prefix + (sequence % maxQueue);
-    const nameSearch = name.toLowerCase();
+    const billExists = await Bill.findOne(
+      { shopId, orderId },
+      { isActived: 1 }
+    ).lean();
+    if (billExists && billExists.isActived) {
+      throw ErrorForbidden("bill is exists.");
+    }
+
     const { items } = await getOrderById(shopId, orderId);
     const menuIds = items.map((item) => item.menuId.toString());
     const menus = await getMenuByIds(shopId, menuIds);
@@ -84,21 +92,48 @@ const service = {
       };
     });
     const amount = _.sumBy(billItems, "amount");
-    const { receiveNumber } = await getShopById(shopId);
+    const { name: shopName, receiveNumber } = await getShopById(shopId);
     const promptpay = await generatePromptpay(receiveNumber, amount);
     const bill = await Bill.create({
-      name,
-      nameSearch,
-      sequence,
       customer,
       shopId,
+      shopName,
       orderId,
       amount,
       promptpay,
       items: billItems,
     });
-    if (!!bill) {
-      await inactiveOrder(shopId, orderId);
+    console.log(bill);
+    if (bill) {
+      await updateStatusOrder(shopId, orderId, BillStatus.INITIALIZE);
+    }
+    return bill;
+  },
+
+  async update({ shopId, orderId, id, status, updateStatusOrder }) {
+    await this.getById(shopId, id);
+    const updateCriteria = {
+      status,
+    };
+    if (status === BillStatus.CANCEL || status === BillStatus.REJECT) {
+      updateCriteria.isActived = false;
+    }
+    if (status === BillStatus.QUEUE) {
+      const sequence = (await this.getLastSequence(shopId)) + 1;
+      const maxQueue = 100;
+      const prefixSequence = Math.floor(sequence / maxQueue) % 26;
+      const prefix = String.fromCharCode(65 + prefixSequence); // A=65 ... Z=90
+      const name = prefix + (sequence % maxQueue);
+      const nameSearch = name.toLowerCase();
+      updateCriteria.name = name;
+      updateCriteria.nameSearch = nameSearch;
+      updateCriteria.sequence = sequence;
+    }
+    const bill = await Bill.findByIdAndUpdate(id, updateCriteria, {
+      new: true,
+    });
+    if (bill) {
+      await updateStatusOrder(shopId, orderId, status);
     }
     return bill;
   },

@@ -1,4 +1,5 @@
 const _ = require("lodash");
+const ObjectId = require("mongoose").Types.ObjectId;
 const Menu = require("../models/Menu");
 const { ErrorNotFound } = require("../configs/errors");
 
@@ -27,6 +28,9 @@ const service = {
   },
 
   async getById(shopId, id) {
+    if(!ObjectId.isValid(id)) {
+      throw ErrorNotFound("menu is not exists.");
+    }
     const menu = await Menu.findById(id).lean();
     if (!menu || !menu.isActived || menu.shopId.toString() !== shopId) {
       throw ErrorNotFound("menu is not exists.");

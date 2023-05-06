@@ -1,14 +1,30 @@
 const menuService = require("../services/menu.service");
+const shopService = require("../services/shop.service");
+const orderService = require("../services/order.service");
 const fileService = require("../services/file.service");
-const menuSerializer = require("../serializers/menu");
+const menuOrderSerializer = require("../serializers/menuOrder");
+const order = require("../serializers/order");
 
 const controller = {
+  async _serialize(shopId, orderId, menus = []) {
+    const shop = !shopId ? null : await shopService.getById(shopId);
+    const shops = !shop ? [] : [shop];
+    const order = !orderId ? null : await orderService.getById(shopId, orderId);
+    const orders = !order ? [] : [order];
+    return menuOrderSerializer.serialize(shops, menus, orders);
+  },
+
   async query(req, res) {
     try {
       req.validate();
+      const { shopId, orderId } = req.query;
       const menus = await menuService.query(req.query);
-      const menuSerialized = menuSerializer.serialize(menus);
-      res.success(menuSerialized);
+      const menuOrderSerialized = await controller._serialize(
+        shopId,
+        orderId,
+        menus
+      );
+      res.success(menuOrderSerialized);
     } catch (error) {
       res.error(error);
     }
@@ -21,10 +37,13 @@ const controller = {
       if (req.file) {
         file = await fileService.upload(req.file, "menus");
       }
+      const { shopId, orderId } = req.body;
       const param = { ...req.body, ...file };
       const menu = await menuService.create(param);
-      const menuSerialized = menuSerializer.serialize([menu]);
-      res.success(menuSerialized);
+      const menuOrderSerialized = await controller._serialize(shopId, orderId, [
+        menu,
+      ]);
+      res.success(menuOrderSerialized);
     } catch (error) {
       res.error(error);
     }
@@ -34,10 +53,13 @@ const controller = {
     try {
       req.validate();
       const { id } = req.params;
+      const { shopId, orderId } = req.body;
       const param = { ...req.body, id, removeFile: fileService.remove };
       const menu = await menuService.remove(param);
-      const menuSerialized = menuSerializer.serialize([menu]);
-      res.success(menuSerialized);
+      const menuOrderSerialized = await controller._serialize(shopId, orderId, [
+        menu,
+      ]);
+      res.success(menuOrderSerialized);
     } catch (error) {
       res.error(error);
     }

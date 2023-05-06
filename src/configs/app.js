@@ -1,6 +1,7 @@
 require("dotenv").config();
 module.exports = {
   port: process.env.PORT || 3001,
+  origin: process.env.ORIGIN || "http://localhost:5173",
   database: {
     user: process.env.MONGODB_USER || "root",
     password: process.env.MONGODB_PASSWORD || "1234",

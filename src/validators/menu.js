@@ -1,6 +1,7 @@
 const { check } = require("express-validator");
 const shopService = require("../services/shop.service");
 const menuService = require("../services/menu.service");
+const orderService = require("../services/order.service");
 
 const shopIdIsExists = async (value) => {
   try {
@@ -12,8 +13,17 @@ const shopIdIsExists = async (value) => {
 
 const menuIdIsExists = async (value, options) => {
   try {
-    const shopId = options.req.body?.shopId ?? 0;
+    const shopId = options.req.body?.shopId ?? options.req.query?.shopId ?? 0;
     return await menuService.getById(shopId, value);
+  } catch (error) {
+    throw error;
+  }
+};
+
+const orderIdIsExists = async (value, options) => {
+  try {
+    const shopId = options.req.body?.shopId ?? options.req.query?.shopId ?? 0;
+    return await orderService.getById(shopId, value);
   } catch (error) {
     throw error;
   }
@@ -26,6 +36,13 @@ module.exports = {
       .withMessage("is empty")
       .bail()
       .custom(shopIdIsExists)
+      .withMessage("is not exists"),
+    check("orderId")
+      .optional()
+      // .notEmpty()
+      // .withMessage("is empty")
+      // .bail()
+      .custom(orderIdIsExists)
       .withMessage("is not exists"),
     check("keyword")
       .optional()

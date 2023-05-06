@@ -1,19 +1,54 @@
 const _ = require("lodash");
+const shopSerializer = require("./shop");
 
 module.exports = {
-  serialize(bills = []) {
+  serializeBills(bills = []) {
     return bills.map((bill) => {
       const items = bill.items.map((item) => {
         return {
           id: item._id.toString(),
-          ..._.pick(item, ["name", "price", "quantity", "description", "note"]),
+          ..._.pick(item, [
+            "name",
+            "price",
+            "quantity",
+            "amount",
+            "description",
+            "note",
+          ]),
         };
       });
       return {
         id: bill._id.toString(),
-        ..._.pick(bill, ["name", "sequence", "customer", "createdAt", "updatedAt"]),
+        ..._.pick(bill, [
+          "name",
+          "sequence",
+          "shopName",
+          "customer",
+          "status",
+          "amount",
+          "promptpay",
+          "isActived",
+          "createdAt",
+          "updatedAt",
+        ]),
         items,
       };
     });
+  },
+
+  // serialize(bills = [], shops = []) {
+  //   const billSerialized = this.serializeBills(bills);
+  //   const shopSerialized = shopSerializer.serializeShops(shops);
+  //   return {
+  //     bills: billSerialized,
+  //     shops: shopSerialized,
+  //   };
+  // },
+
+  serialize(bills = []) {
+    const billSerialized = this.serializeBills(bills);
+    return {
+      bills: billSerialized,
+    };
   },
 };

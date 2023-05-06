@@ -13,7 +13,7 @@ const shopIdIsExists = async (value) => {
 
 const menuIdIsExists = async (value, options) => {
   try {
-    const shopId = options.req.body?.shopId ?? 0;
+    const shopId = options.req.body?.shopId ?? options.req.query?.shopId ?? 0;
     return await menuService.getById(shopId, value);
   } catch (error) {
     throw error;
@@ -22,7 +22,7 @@ const menuIdIsExists = async (value, options) => {
 
 const orderIdIsExists = async (value, options) => {
   try {
-    const shopId = options.req.body?.shopId ?? 0;
+    const shopId = options.req.body?.shopId ?? options.req.query?.shopId ?? 0;
     return await orderService.getById(shopId, value);
   } catch (error) {
     throw error;
@@ -31,8 +31,8 @@ const orderIdIsExists = async (value, options) => {
 
 const orderItemIdIsExists = async (value, options) => {
   try {
-    const shopId = options.req.body?.shopId ?? 0;
-    const orderId = options.req.body?.orderId ?? 0;
+    const shopId = options.req.body?.shopId ?? options.req.query?.shopId ?? 0;
+    const orderId = options.req.body?.orderId ?? options.req.query?.orderId ?? 0;
     return await orderService.getItemById(shopId, orderId, value);
   } catch (error) {
     throw error;
@@ -57,7 +57,25 @@ module.exports = {
       .withMessage("must be number and value greater than 0"),
   ],
 
-  add: [
+  get: [
+    check("shopId")
+      .notEmpty()
+      .withMessage("is empty")
+      .bail()
+      .custom(shopIdIsExists)
+      .withMessage("is not exists"),
+  ],
+
+  create: [
+    check("shopId")
+      .notEmpty()
+      .withMessage("is empty")
+      .bail()
+      .custom(shopIdIsExists)
+      .withMessage("is not exists"),
+  ],
+
+  update: [
     check("shopId")
       .notEmpty()
       .withMessage("is empty")
@@ -73,58 +91,78 @@ module.exports = {
     check("quantity")
       .notEmpty()
       .withMessage("is empty")
-      .isInt({ min: 1 })
-      .withMessage("must be number and value greater than 0"),
-    check("orderId")
-      .optional()
-      .custom(orderIdIsExists)
-      .withMessage("is not exists"),
+      .isInt({ min: 0 })
+      .withMessage("must be number and value greater than or equal 0"),
   ],
 
-  edit: [
-    check("shopId")
-      .notEmpty()
-      .withMessage("is empty")
-      .bail()
-      .custom(shopIdIsExists)
-      .withMessage("is not exists"),
-    check("orderId")
-      .notEmpty()
-      .withMessage("is empty")
-      .bail()
-      .custom(orderIdIsExists)
-      .withMessage("is not exists"),
-    check("orderItemId")
-      .notEmpty()
-      .withMessage("is empty")
-      .bail()
-      .custom(orderItemIdIsExists)
-      .withMessage("is not exists"),
-    check("quantity")
-      .notEmpty()
-      .withMessage("is empty")
-      .isInt({ min: 1 })
-      .withMessage("must be number and value greater than 0"),
-  ],
+  // add: [
+  //   check("shopId")
+  //     .notEmpty()
+  //     .withMessage("is empty")
+  //     .bail()
+  //     .custom(shopIdIsExists)
+  //     .withMessage("is not exists"),
+  //   check("menuId")
+  //     .notEmpty()
+  //     .withMessage("is empty")
+  //     .bail()
+  //     .custom(menuIdIsExists)
+  //     .withMessage("is not exists"),
+  //   check("quantity")
+  //     .notEmpty()
+  //     .withMessage("is empty")
+  //     .isInt({ min: 1 })
+  //     .withMessage("must be number and value greater than 0"),
+  //   check("orderId")
+  //     .optional()
+  //     .custom(orderIdIsExists)
+  //     .withMessage("is not exists"),
+  // ],
 
-  remove: [
-    check("shopId")
-      .notEmpty()
-      .withMessage("is empty")
-      .bail()
-      .custom(shopIdIsExists)
-      .withMessage("is not exists"),
-    check("orderId")
-      .notEmpty()
-      .withMessage("is empty")
-      .bail()
-      .custom(orderIdIsExists)
-      .withMessage("is not exists"),
-    check("orderItemId")
-      .notEmpty()
-      .withMessage("is empty")
-      .bail()
-      .custom(orderItemIdIsExists)
-      .withMessage("is not exists"),
-  ],
+  // edit: [
+  //   check("shopId")
+  //     .notEmpty()
+  //     .withMessage("is empty")
+  //     .bail()
+  //     .custom(shopIdIsExists)
+  //     .withMessage("is not exists"),
+  //   check("orderId")
+  //     .notEmpty()
+  //     .withMessage("is empty")
+  //     .bail()
+  //     .custom(orderIdIsExists)
+  //     .withMessage("is not exists"),
+  //   check("orderItemId")
+  //     .notEmpty()
+  //     .withMessage("is empty")
+  //     .bail()
+  //     .custom(orderItemIdIsExists)
+  //     .withMessage("is not exists"),
+  //   check("quantity")
+  //     .notEmpty()
+  //     .withMessage("is empty")
+  //     .isInt({ min: 1 })
+  //     .withMessage("must be number and value greater than 0"),
+  // ],
+
+  // remove: [
+  //   check("shopId")
+  //     .notEmpty()
+  //     .withMessage("is empty")
+  //     .bail()
+  //     .custom(shopIdIsExists)
+  //     .withMessage("is not exists"),
+  //   check("orderId")
+  //     .notEmpty()
+  //     .withMessage("is empty")
+  //     .bail()
+  //     .custom(orderIdIsExists)
+  //     .withMessage("is not exists"),
+  //   check("orderItemId")
+  //     .notEmpty()
+  //     .withMessage("is empty")
+  //     .bail()
+  //     .custom(orderItemIdIsExists)
+  //     .withMessage("is not exists"),
+  // ],
 };

@@ -14,4 +14,9 @@ const schema = new mongoose.Schema(
   { timestamps: true }
 );
 
+schema.index(
+  { shopId: 1, _id: 1 },
+  { unique: true }
+);
+
 module.exports = mongoose.model("Menu", schema);
