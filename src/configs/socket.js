@@ -8,6 +8,7 @@ const getRoomId = (shopId, orderId) => {
 const socket = (httpServer, app) => {
   const allowedOrigins = appConfig.origin.toString().split(",");
   const io = new Server(httpServer, {
+    transports: ['websocket', 'polling'],
     cors: {
       origin: allowedOrigins,
     },
