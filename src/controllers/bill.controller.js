@@ -62,7 +62,7 @@ const controller = {
     try {
       req.validate();
       const { id } = req.params;
-      const { shopId } = req.body;
+      const { shopId, orderId } = req.body;
       const param = {
         ...req.body,
         id,
@@ -70,6 +70,9 @@ const controller = {
       };
       const bill = await billService.update(param);
       const billSerialized = await controller._serialize(shopId, [bill]);
+      if (req.io?.commitOrderUpdated) {
+        req.io?.commitOrderUpdated({ shopId, orderId, payload: billSerialized });
+      }
       res.success(billSerialized);
     } catch (error) {
       res.error(error);
