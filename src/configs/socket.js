@@ -8,9 +8,15 @@ const getRoomId = (shopId, orderId) => {
 const socket = (httpServer, app) => {
   const allowedOrigins = appConfig.origin.toString().split(",");
   const io = new Server(httpServer, {
+    // transports: ['websocket', 'polling'],
+    // cors: {
+    //   origin: allowedOrigins,
+    // },
     transports: ['websocket', 'polling'],
     cors: {
-      origin: allowedOrigins,
+        origin: '*',
+        credentials: true,
+        methods: ['GET', 'POST'],
     },
   });
   io.on("connection", (socket) => {
