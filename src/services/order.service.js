@@ -171,6 +171,7 @@ const service = {
       updateCriteria.status = OrderStatus.COMPLETE;
     }
     if (billStatus === BillStatus.REJECT || billStatus === BillStatus.CANCEL) {
+      updateCriteria.billId = null;
       updateCriteria.status = OrderStatus.INITIALIZE;
     }
     return await Order.findOneAndUpdate(

@@ -103,7 +103,6 @@ const service = {
       promptpay,
       items: billItems,
     });
-    console.log(bill);
     if (bill) {
       await updateStatusOrder(shopId, orderId, bill._id.toString(), BillStatus.INITIALIZE, customer);
     }
