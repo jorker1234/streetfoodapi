@@ -21,8 +21,10 @@ const ItemSchema = new mongoose.Schema(
 const schema = new mongoose.Schema(
   {
     shopId: { type: mongoose.Schema.Types.ObjectId, required: true },
+    billId: { type: mongoose.Schema.Types.ObjectId },
     items: { type: [ItemSchema], default: [] },
     isActived: { type: Boolean, default: true },
+    customer: { type: String},
     status: {
       type: String,
       enum: Object.values(OrderStatus),

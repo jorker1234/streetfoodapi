@@ -17,7 +17,8 @@ module.exports = {
       const amount = _.sumBy(items, "amount");
       return {
         id: order._id.toString(),
-        ..._.pick(order, ["status"]),
+        billId: order.billId?.toString(),
+        ..._.pick(order, ["status", "customer"]),
         amount,
         items,
       };

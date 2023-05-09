@@ -151,8 +151,13 @@ const service = {
   //   );
   // },
 
-  async updateStatus(shopId, orderId, billStatus) {
-    const updateCriteria = {};
+  async updateStatus(shopId, orderId, billId, billStatus, customer) {
+    const updateCriteria = {
+      billId,
+    };
+    if (!!customer) {
+      updateCriteria.customer = customer;
+    }
     if (billStatus === BillStatus.INITIALIZE) {
       updateCriteria.status = OrderStatus.PAYMENT_REQUEST;
     }

@@ -70,9 +70,6 @@ const controller = {
       };
       const bill = await billService.update(param);
       const billSerialized = await controller._serialize(shopId, [bill]);
-      // if (req.io?.commitOrderUpdated) {
-      //   req.io?.commitOrderUpdated({ shopId, orderId, payload: billSerialized });
-      // }
       res.success(billSerialized);
     } catch (error) {
       res.error(error);

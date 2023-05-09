@@ -7,11 +7,11 @@ const order = require("../serializers/order");
 
 const controller = {
   async _serialize(shopId, orderId, menus = []) {
-    const shop = !shopId ? null : await shopService.getById(shopId);
-    const shops = !shop ? [] : [shop];
+    //const shop = !shopId ? null : await shopService.getById(shopId);
+    //const shops = !shop ? [] : [shop];
     const order = !orderId ? null : await orderService.getById(shopId, orderId);
     const orders = !order ? [] : [order];
-    return menuOrderSerializer.serialize(shops, menus, orders);
+    return menuOrderSerializer.serialize([], menus, orders);
   },
 
   async query(req, res) {

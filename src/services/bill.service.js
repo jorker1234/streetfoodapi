@@ -105,7 +105,7 @@ const service = {
     });
     console.log(bill);
     if (bill) {
-      await updateStatusOrder(shopId, orderId, BillStatus.INITIALIZE);
+      await updateStatusOrder(shopId, orderId, bill._id.toString(), BillStatus.INITIALIZE, customer);
     }
     return bill;
   },
@@ -133,7 +133,7 @@ const service = {
       new: true,
     });
     if (bill) {
-      await updateStatusOrder(shopId, orderId, status);
+      await updateStatusOrder(shopId, orderId, id, status);
     }
     return bill;
   },

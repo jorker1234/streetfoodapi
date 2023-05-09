@@ -21,7 +21,7 @@ const controller = {
       req.validate();
       const { shopId } = req.query;
       const orders = await orderService.query(req.query);
-      const menuOrderSerialized = await controller._serialize(shopId, orders);
+      const menuOrderSerialized = await controller._serialize(null, orders);
       res.success(menuOrderSerialized);
     } catch (error) {
       res.error(error);
@@ -47,7 +47,7 @@ const controller = {
       const param = { ...req.body };
       const { shopId } = req.body;
       const order = await orderService.create(param);
-      const menuOrderSerialized = await controller._serialize(shopId, [order]);
+      const menuOrderSerialized = await controller._serialize(null, [order]);
       res.success(menuOrderSerialized);
     } catch (error) {
       res.error(error);
@@ -61,7 +61,7 @@ const controller = {
       const { shopId } = req.body;
       const param = { ...req.body, id };
       const order = await orderService.update(param);
-      const menuOrderSerialized = await controller._serialize(shopId, [order]);
+      const menuOrderSerialized = await controller._serialize(null, [order]);
       res.success(menuOrderSerialized);
     } catch (error) {
       res.error(error);
