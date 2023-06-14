@@ -14,6 +14,17 @@ const controller = {
     }
   },
 
+  async get(req, res) {
+    try {
+      const { id } = req.params;
+      const shop = await shopService.getById(id);
+      const shopSerialized = shopSerializer.serialize([shop]);
+      res.success(shopSerialized);
+    } catch (error) {
+      res.error(error);
+    }
+  },
+
   async create(req, res) {
     try {
       req.validate();

@@ -1,6 +1,6 @@
 const _ = require("lodash");
 const ObjectId = require("mongoose").Types.ObjectId;
-const Shop = require("../models/Shop");
+const { User, RoleStatus } = require("../models/User");
 const { ErrorNotFound } = require("../configs/errors");
 
 const service = {
@@ -17,36 +17,38 @@ const service = {
     if (!_.isNil(keyword)) {
       filter.nameSearch = new RegExp(`^${keyword.toLowerCase()}`);
     }
-    const menus = await Shop.find(filter, projection)
+    const users = await User.find(filter, projection)
       .sort(sort)
       .skip(skip)
       .limit(limit)
       .lean();
-    return menus;
+    return users;
   },
 
   async getById(id) {
-    if(!ObjectId.isValid(id)) {
-      throw ErrorNotFound("shop is not exists.");
+    if (!ObjectId.isValid(id)) {
+      throw ErrorNotFound("user is not exists.");
     }
-    const shop = await Shop.findById(id).lean();
-    if (!shop || !shop.isActived) {
-      throw ErrorNotFound("shop is not exists.");
+    const user = await User.findById(id).lean();
+    if (!user || !user.isActived) {
+      throw ErrorNotFound("user is not exists.");
     }
-    return shop;
+    return user;
   },
 
-  async create({ name, receiveNumber, phone, imagePath, imageUrl  }) {
+  async create({ name, username, password, role, shopId }) {
     const nameSearch = name.toLowerCase();
-    const shop = await Shop.create({
+    const usernameearch = username.toLowerCase();
+    const user = await User.create({
       name,
       nameSearch,
-      receiveNumber,
-      phone,
-      imagePath,
-      imageUrl,
+      username,
+      usernameearch,
+      password,
+      role,
+      shopId,
     });
-    return shop;
+    return user;
   },
 };
 

@@ -4,6 +4,7 @@ const validator = require('../../validators/shop');
 const multer = require("../multer");
 
 router.get("/", validator.query, shopController.query);
+router.get("/:id", shopController.get);
 router.post(
     "/",
     multer.single("file"),
