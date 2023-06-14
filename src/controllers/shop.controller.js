@@ -40,6 +40,23 @@ const controller = {
       res.error(error);
     }
   },
+
+  async update(req, res) {
+    try {
+      req.validate();
+      let file = {};
+      if (req.file) {
+        file = await fileService.upload(req.file, "shops");
+      }
+      const { id } = req.params;
+      const param = { ...req.body, ...file, id };
+      const shop = await shopService.update(param);
+      const shopSerialized = shopSerializer.serialize([shop]);
+      res.success(shopSerialized);
+    } catch (error) {
+      res.error(error);
+    }
+  },
 };
 
 module.exports = { ...controller };

@@ -46,4 +46,18 @@ module.exports = {
       .isMobilePhone("th-TH")
       .withMessage("must be phone"),
   ],
+
+  update: [
+    check("name")
+      .optional()
+      .isLength({ min: 1, max: 100 })
+      .withMessage("must be between 1-100 characters"),
+    check("receiveNumber")
+      .optional()
+      .custom(receiveNumberValidate),
+    check("phone")
+      .optional()
+      .isMobilePhone("th-TH")
+      .withMessage("must be phone"),
+  ],
 };

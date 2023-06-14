@@ -11,5 +11,11 @@ router.post(
     validator.create,
     shopController.create
   );
+  router.put(
+    "/:id",
+    multer.single("file"),
+    validator.update,
+    shopController.update
+  );
 
 module.exports = router;

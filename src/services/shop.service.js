@@ -26,7 +26,7 @@ const service = {
   },
 
   async getById(id) {
-    if(!ObjectId.isValid(id)) {
+    if (!ObjectId.isValid(id)) {
       throw ErrorNotFound("shop is not exists.");
     }
     const shop = await Shop.findById(id).lean();
@@ -36,7 +36,7 @@ const service = {
     return shop;
   },
 
-  async create({ name, receiveNumber, phone, imagePath, imageUrl  }) {
+  async create({ name, receiveNumber, phone, imagePath, imageUrl }) {
     const nameSearch = name.toLowerCase();
     const shop = await Shop.create({
       name,
@@ -47,6 +47,20 @@ const service = {
       imageUrl,
     });
     return shop;
+  },
+
+  async update({ id, name, receiveNumber, phone, imagePath, imageUrl }) {
+    let updateCriteria = {
+      name,
+      receiveNumber,
+      phone,
+      imagePath,
+      imageUrl,
+    };
+    return await Shop.findOneAndUpdate({ _id: id }, updateCriteria, {
+      upsert: true,
+      new: true,
+    });
   },
 };
 
