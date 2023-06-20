@@ -6,8 +6,8 @@ const databases = {
     let db;
     let mongoUri;
     try {
-      mongoUri = `mongodb://${user}:${password}@${host}:${port}/${name}?authSource=admin`;
-      //const mongoUri = `mongodb+srv://${user}:${password}@${host}/${name}?retryWrites=true&w=majority`;
+      //mongoUri = `mongodb://${user}:${password}@${host}:${port}/${name}?authSource=admin`;
+      mongoUri = `mongodb+srv://${user}:${password}@${host}/${name}?retryWrites=true&w=majority`;
       db = await mongoose.connect(mongoUri);
       console.log("MongoDB connected");
     } catch (error) {
