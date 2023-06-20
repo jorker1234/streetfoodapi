@@ -32,7 +32,8 @@ const orderIdIsExists = async (value, options) => {
 const orderItemIdIsExists = async (value, options) => {
   try {
     const shopId = options.req.body?.shopId ?? options.req.query?.shopId ?? 0;
-    const orderId = options.req.body?.orderId ?? options.req.query?.orderId ?? 0;
+    const orderId =
+      options.req.body?.orderId ?? options.req.query?.orderId ?? 0;
     return await orderService.getItemById(shopId, orderId, value);
   } catch (error) {
     throw error;
@@ -73,6 +74,10 @@ module.exports = {
       .bail()
       .custom(shopIdIsExists)
       .withMessage("is not exists"),
+    check("customer")
+      .optional()
+      .isLength({ min: 1, max: 100 })
+      .withMessage("must be between 1-100 characters"),
   ],
 
   update: [

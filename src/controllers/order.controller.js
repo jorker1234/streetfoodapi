@@ -21,7 +21,8 @@ const controller = {
       req.validate();
       const { shopId } = req.query;
       const orders = await orderService.query(req.query);
-      const menuOrderSerialized = await controller._serialize(shopId, orders);
+      const menuOrderSerialized = menuOrderSerializer.serialize([], [], orders);
+      //const menuOrderSerialized = await controller._serialize(shopId, orders);
       res.success(menuOrderSerialized);
     } catch (error) {
       res.error(error);

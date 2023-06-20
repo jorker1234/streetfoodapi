@@ -7,7 +7,7 @@ module.exports = {
   database: {
     user: process.env.MONGODB_USER || "root",
     password: process.env.MONGODB_PASSWORD || "1234",
-    host: process.env.MONGODB_HOST || "mongodb",
+    host: process.env.MONGODB_HOST || "localhost",
     port: process.env.MONGODB_DOCKER_PORT || "27017",
     name: process.env.MONGODB_DATABASE || "streetfood",
   },

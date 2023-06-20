@@ -47,12 +47,13 @@ const service = {
     return order;
   },
 
-  async create({ shopId }) {
+  async create({ shopId, customer }) {
     const orderId = new ObjectId();
     return await Order.findOneAndUpdate(
       { _id: orderId, shopId },
       {
         shopId,
+        customer,
       },
       { upsert: true, new: true }
     );

@@ -79,6 +79,23 @@ module.exports = {
       .withMessage("must be number and value greater than 0"),
   ],
 
+  update: [
+    check("shopId")
+      .notEmpty()
+      .withMessage("is empty")
+      .bail()
+      .custom(shopIdIsExists)
+      .withMessage("is not exists"),
+    check("name")
+      .optional()
+      .isLength({ min: 1, max: 100 })
+      .withMessage("must be between 1-100 characters"),
+    check("price")
+      .optional()
+      .isFloat({ min: 1 })
+      .withMessage("must be number and value greater than 0"),
+  ],
+
   remove: [
     check("shopId")
       .notEmpty()

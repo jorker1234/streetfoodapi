@@ -37,10 +37,28 @@ const controller = {
       if (req.file) {
         file = await fileService.upload(req.file, "menus");
       }
-      const { shopId, orderId } = req.body;
       const param = { ...req.body, ...file };
       const menu = await menuService.create(param);
-      const menuOrderSerialized = await controller._serialize(shopId, orderId, [
+      const menuOrderSerialized = await controller._serialize(null, null, [
+        menu,
+      ]);
+      res.success(menuOrderSerialized);
+    } catch (error) {
+      res.error(error);
+    }
+  },
+
+  async update(req, res) {
+    try {
+      req.validate();
+      let file = {};
+      if (req.file) {
+        file = await fileService.upload(req.file, "shops");
+      }
+      const { id } = req.params;
+      const param = { ...req.body, ...file, id };
+      const menu = await menuService.update(param);
+      const menuOrderSerialized = await controller._serialize(null, null, [
         menu,
       ]);
       res.success(menuOrderSerialized);

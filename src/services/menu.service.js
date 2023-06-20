@@ -28,7 +28,7 @@ const service = {
   },
 
   async getById(shopId, id) {
-    if(!ObjectId.isValid(id)) {
+    if (!ObjectId.isValid(id)) {
       throw ErrorNotFound("menu is not exists.");
     }
     const menu = await Menu.findById(id).lean();
@@ -65,12 +65,25 @@ const service = {
     return menu;
   },
 
+  async update({ id, name, shopId, price, description, imagePath, imageUrl }) {
+    const updateCriteria = {
+      name,
+      price,
+      description,
+      imagePath,
+      imageUrl,
+    };
+    await service.getById(shopId, id);
+    return await Menu.findByIdAndUpdate(id, updateCriteria, {
+      upsert: true,
+      new: true,
+    });
+  },
+
   async remove({ shopId, id, removeFile }) {
-    const menu = await Menu.findOneAndDelete({
-      _id: id,
-      shopId,
-    }, {new: true}).lean();
-    if(menu.imagePath) {
+    await service.sgetById(shopId, id);
+    const menu = await Menu.findByIdAndDelete(id, { new: true }).lean();
+    if (menu.imagePath) {
       await removeFile(menu.imagePath);
     }
     return menu;
