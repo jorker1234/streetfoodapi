@@ -1,14 +1,19 @@
 const _ = require("lodash");
+const bcrypt = require("bcrypt");
 const ObjectId = require("mongoose").Types.ObjectId;
-const { User, RoleStatus } = require("../models/User");
-const { ErrorNotFound } = require("../configs/errors");
+const { User } = require("../models/User");
+const {
+  ErrorNotFound,
+  ErrorUnauthorized,
+  ErrorBadRequest,
+} = require("../configs/errors");
 
 const service = {
   async query({
     keyword,
     skip = 0,
     limit = 10,
-    sort = { name: 1 },
+    sort = { username: 1 },
     projection = null,
   }) {
     const filter = {
@@ -37,18 +42,55 @@ const service = {
   },
 
   async create({ name, username, password, role, shopId }) {
+    const userExists = await User.findOne({ username }).lean();
+    if (userExists) {
+      throw ErrorBadRequest("username is exists.");
+    }
     const nameSearch = name.toLowerCase();
-    const usernameearch = username.toLowerCase();
+    const usernameSearch = username.toLowerCase();
+    const passwordHashed = await bcrypt.hash(password, 10);
     const user = await User.create({
       name,
       nameSearch,
       username,
-      usernameearch,
-      password,
+      usernameSearch,
+      password: passwordHashed,
       role,
       shopId,
     });
     return user;
+  },
+
+  async signin({ username, password }) {
+    const user = await User.findOne({ username }).lean();
+    if (!user || !user.isActived) {
+      throw ErrorUnauthorized("username or password is invalid.");
+    }
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) {
+      throw ErrorUnauthorized("username or password is invalid.");
+    }
+    return user;
+  },
+
+  async changePassword({ id, password, oldPassword }) {
+    const user = await service.getById(id);
+    const match = await bcrypt.compare(oldPassword, user.password);
+    if (!match) {
+      throw ErrorUnauthorized("old password is invalid.");
+    }
+
+    const passwordHashed = await bcrypt.hash(password, 10);
+    const userUpdated = await User.findByIdAndUpdate(
+      user._id,
+      {
+        password: passwordHashed,
+      },
+      {
+        new: true,
+      }
+    );
+    return userUpdated;
   },
 };
 

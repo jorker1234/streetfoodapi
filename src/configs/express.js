@@ -1,6 +1,7 @@
 const express = require("express");
 const { mongoDB } = require("./database");
 const cors = require('cors');
+const passport = require('./passport');
 const appConfig = require("./app");
 
 module.exports = async (app) => {
@@ -25,6 +26,8 @@ module.exports = async (app) => {
   // Parser Body
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
+
+  passport(app);
 
   // Custom Response Format
   app.use(require("../configs/responseFormat"));

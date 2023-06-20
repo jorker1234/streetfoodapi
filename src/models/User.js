@@ -25,7 +25,9 @@ const schema = new mongoose.Schema(
   { timestamps: true }
 );
 
+schema.index({ username: 1 }, { unique: true });
+
 module.exports = {
-  Bill: mongoose.model("User", schema),
+  User: mongoose.model("User", schema),
   RoleStatus,
 };
