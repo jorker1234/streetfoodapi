@@ -18,7 +18,7 @@ module.exports = {
       return {
         id: order._id.toString(),
         billId: order.billId?.toString(),
-        ..._.pick(order, ["status", "customer"]),
+        ..._.pick(order, ["status", "customer", "updatedAt", "createdAt"]),
         amount,
         items,
       };
