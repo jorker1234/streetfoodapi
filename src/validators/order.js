@@ -2,6 +2,7 @@ const { check } = require("express-validator");
 const shopService = require("../services/shop.service");
 const menuService = require("../services/menu.service");
 const orderService = require("../services/order.service");
+const { OrderStatus } = require("../models/Order");
 
 const shopIdIsExists = async (value) => {
   try {
@@ -40,6 +41,11 @@ const orderItemIdIsExists = async (value, options) => {
   }
 };
 
+const orderStatusIsValid = (value) => {
+  const orderStatus = Object.values(OrderStatus);
+  return orderStatus.indexOf(value) >= 0;
+};
+
 module.exports = {
   query: [
     check("shopId")
@@ -56,6 +62,12 @@ module.exports = {
       .optional()
       .isInt({ min: 1 })
       .withMessage("must be number and value greater than 0"),
+    check("status")
+      .notEmpty()
+      .withMessage("is empty")
+      .bail()
+      .custom(orderStatusIsValid)
+      .withMessage("is invalid"),
   ],
 
   get: [

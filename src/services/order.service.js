@@ -10,12 +10,16 @@ const service = {
     skip = 0,
     limit = 10,
     sort = { updatedAt: -1 },
+    status = null,
     projection = null,
   }) {
     const filter = {
       shopId,
       isActived: true,
     };
+    if(status) {
+      filter.OrderStatus = status;
+    }
     const orders = await Order.find(filter, projection)
       .sort(sort)
       .skip(skip)
