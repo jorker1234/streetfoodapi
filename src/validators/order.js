@@ -63,9 +63,7 @@ module.exports = {
       .isInt({ min: 1 })
       .withMessage("must be number and value greater than 0"),
     check("status")
-      .notEmpty()
-      .withMessage("is empty")
-      .bail()
+      .optional()
       .custom(orderStatusIsValid)
       .withMessage("is invalid"),
   ],

@@ -18,7 +18,7 @@ const service = {
       isActived: true,
     };
     if(status) {
-      filter.OrderStatus = status;
+      filter.status = status;
     }
     const orders = await Order.find(filter, projection)
       .sort(sort)
