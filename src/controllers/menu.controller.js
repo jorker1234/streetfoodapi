@@ -53,7 +53,7 @@ const controller = {
       req.validate();
       let file = {};
       if (req.file) {
-        file = await fileService.upload(req.file, "shops");
+        file = await fileService.upload(req.file, "menus");
       }
       const { id } = req.params;
       const param = { ...req.body, ...file, id };
