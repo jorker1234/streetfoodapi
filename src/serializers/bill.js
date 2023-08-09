@@ -19,6 +19,7 @@ module.exports = {
       });
       return {
         id: bill._id.toString(),
+        orderId: bill.orderId.toString(),
         ..._.pick(bill, [
           "name",
           "sequence",
