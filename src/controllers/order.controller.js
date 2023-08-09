@@ -72,8 +72,7 @@ const controller = {
   async remove(req, res) {
     try {
       req.validate();
-      const { id } = req.params;
-      const { shopId } = req.body;
+      const { shopId, id } = req.params;
       const param = { shopId, id };
       console.log("remove", param);
       const order = await orderService.remove(param);
