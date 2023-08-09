@@ -110,6 +110,15 @@ module.exports = {
       .withMessage("must be number and value greater than or equal 0"),
   ],
 
+
+  remove: [
+    check("shopId")
+      .notEmpty()
+      .withMessage("is empty")
+      .bail()
+      .custom(shopIdIsExists)
+      .withMessage("is not exists"),
+  ],
   // add: [
   //   check("shopId")
   //     .notEmpty()

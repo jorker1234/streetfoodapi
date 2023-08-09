@@ -106,6 +106,16 @@ const service = {
     });
   },
 
+  async remove({ shopId, id }) {
+    const order = await service.getById(shopId, id);
+    if(order.status !== OrderStatus.INITIALIZE){
+      throw ErrorBadRequest("order has already payment.");
+    }
+    return await Order.findByIdAndUpdate(id, {isActived: false}, {
+      new: true,
+    });
+  },
+
   // async add({ shopId, orderId, menuId, quantity, note }) {
   //   const item = {
   //     menuId,

@@ -81,7 +81,7 @@ const service = {
   },
 
   async remove({ shopId, id, removeFile }) {
-    await service.sgetById(shopId, id);
+    await service.getById(shopId, id);
     const menu = await Menu.findByIdAndDelete(id, { new: true }).lean();
     if (menu.imagePath) {
       await removeFile(menu.imagePath);

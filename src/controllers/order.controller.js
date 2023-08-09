@@ -69,6 +69,20 @@ const controller = {
     }
   },
 
+  async remove(req, res) {
+    try {
+      req.validate();
+      const { id } = req.params;
+      const { shopId } = req.body;
+      const param = { ...req.body, id };
+      const order = await orderService.remove(param);
+      const menuOrderSerialized = await controller._serialize(shopId, [order]);
+      res.success(menuOrderSerialized);
+    } catch (error) {
+      res.error(error);
+    }
+  },
+
   // async add(req, res) {
   //   try {
   //     req.validate();

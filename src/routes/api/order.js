@@ -7,5 +7,6 @@ router.get("/", validator.query, jwtAuthenticate, orderController.query);
 router.get("/:id", validator.get, orderController.get);
 router.post("/", validator.create, jwtAuthenticate, orderController.create);
 router.put("/:id", validator.update, orderController.update);
+router.delete("/:id", validator.remove, orderController.remove);
 
 module.exports = router;
