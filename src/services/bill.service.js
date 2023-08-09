@@ -6,18 +6,24 @@ const { ErrorNotFound, ErrorForbidden } = require("../configs/errors");
 const service = {
   async query({
     shopId,
-    orderId,
+    orderId = null,
     keyword,
     skip = 0,
     limit = 10,
     sort = { sequence: -1 },
+    status = null,
     projection = null,
   }) {
     const filter = {
       shopId,
-      orderId,
       isActived: true,
     };
+    if (orderId) {
+      filter.orderId = orderId;
+    }
+    if (status) {
+      filter.status = status;
+    }
     if (!_.isNil(keyword)) {
       filter.nameSearch = new RegExp(`^${keyword.toLowerCase()}`);
     }
@@ -104,7 +110,13 @@ const service = {
       items: billItems,
     });
     if (bill) {
-      await updateStatusOrder(shopId, orderId, bill._id.toString(), BillStatus.INITIALIZE, customer);
+      await updateStatusOrder(
+        shopId,
+        orderId,
+        bill._id.toString(),
+        BillStatus.INITIALIZE,
+        customer
+      );
     }
     return bill;
   },

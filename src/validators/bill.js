@@ -33,9 +33,14 @@ module.exports = {
       .bail()
       .custom(shopIdIsExists)
       .withMessage("is not exists"),
+    // check("orderId")
+    //   .notEmpty()
+    //   .withMessage("is empty")
+    //   .bail()
+    //   .custom(orderIdIsExists)
+    //   .withMessage("is not exists"),
     check("orderId")
-      .notEmpty()
-      .withMessage("is empty")
+      .optional()
       .bail()
       .custom(orderIdIsExists)
       .withMessage("is not exists"),
@@ -47,6 +52,10 @@ module.exports = {
       .optional()
       .isInt({ min: 1 })
       .withMessage("must be number and value greater than 0"),
+    check("status")
+      .optional()
+      .custom(statusIdIsValid)
+      .withMessage("is invalid"),
   ],
 
   get: [

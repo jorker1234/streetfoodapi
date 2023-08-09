@@ -75,7 +75,6 @@ const controller = {
       const { id } = req.params;
       const { shopId } = req.query;
       const param = { shopId, id };
-      console.log("remove", param);
       const order = await orderService.remove(param);
       const menuOrderSerialized = await controller._serialize(shopId, [order]);
       res.success(menuOrderSerialized);
