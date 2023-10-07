@@ -2,6 +2,7 @@ const billService = require("../services/bill.service");
 const shopService = require("../services/shop.service");
 const orderService = require("../services/order.service");
 const menuService = require("../services/menu.service");
+const fileService = require("../services/file.service");
 const promptpayService = require("../services/promptpay.service");
 const billSerializer = require("../serializers/bill");
 
@@ -61,10 +62,15 @@ const controller = {
   async update(req, res) {
     try {
       req.validate();
+      let file = {};
+      if (req.file) {
+        file = await fileService.upload(req.file, "bills");
+      }
       const { id } = req.params;
       const { shopId, orderId } = req.body;
       const param = {
         ...req.body,
+        ...file,
         id,
         updateStatusOrder: orderService.updateStatus,
       };

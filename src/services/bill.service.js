@@ -121,10 +121,12 @@ const service = {
     return bill;
   },
 
-  async update({ shopId, orderId, id, status, updateStatusOrder }) {
+  async update({ shopId, orderId, id, status, imagePath, imageUrl, updateStatusOrder }) {
     await this.getById(shopId, id);
     const updateCriteria = {
       status,
+      imagePath,
+      imageUrl,
     };
     if (status === BillStatus.CANCEL || status === BillStatus.REJECT) {
       updateCriteria.isActived = false;

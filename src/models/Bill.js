@@ -38,6 +38,8 @@ const schema = new mongoose.Schema(
     sequence: { type: Number, default: 0 },
     items: { type: [ItemSchema], default: [] },
     isActived: { type: Boolean, default: true },
+    imagePath: { type: String },
+    imageUrl: { type: String },
   },
   { timestamps: true }
 );
