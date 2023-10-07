@@ -5,7 +5,7 @@ const multer = require("../multer");
 
 router.get("/", validator.query, billController.query);
 router.get("/:id", validator.get, billController.get);
-router.post("/", validator.create, billController.create);git
+router.post("/", validator.create, billController.create);
 router.put(
   "/:id",
   multer.single("file"),
