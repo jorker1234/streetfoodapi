@@ -28,6 +28,7 @@ module.exports = {
           "status",
           "amount",
           "promptpay",
+          "imageUrl",
           "isActived",
           "createdAt",
           "updatedAt",
