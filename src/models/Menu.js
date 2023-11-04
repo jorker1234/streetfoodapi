@@ -7,6 +7,7 @@ const schema = new mongoose.Schema(
     shopId: { type: mongoose.Schema.Types.ObjectId, required: true },
     price: { type: Number, required: true },
     description: { type: String },
+    isHidden: { type: Boolean, default: false},
     isActived: { type: Boolean, default: true },
     imagePath: { type: String },
     imageUrl: { type: String },

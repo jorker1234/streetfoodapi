@@ -5,7 +5,7 @@ module.exports = {
     return menus.map((menu) => {
       return {
         id: menu._id.toString(),
-        ..._.pick(menu, ["name", "price", "description", "imageUrl"]),
+        ..._.pick(menu, ["name", "price", "description", "imageUrl", "isHidden"]),
       };
     });
   },

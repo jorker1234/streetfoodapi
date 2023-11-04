@@ -65,13 +65,14 @@ const service = {
     return menu;
   },
 
-  async update({ id, name, shopId, price, description, imagePath, imageUrl }) {
+  async update({ id, name, shopId, price, description, imagePath, imageUrl, isHidden }) {
     const updateCriteria = {
       name,
       price,
       description,
       imagePath,
       imageUrl,
+      isHidden,
     };
     await service.getById(shopId, id);
     return await Menu.findByIdAndUpdate(id, updateCriteria, {
@@ -81,8 +82,11 @@ const service = {
   },
 
   async remove({ shopId, id, removeFile }) {
+    const updateCriteria = {
+      isActived: false,
+    };
     await service.getById(shopId, id);
-    const menu = await Menu.findByIdAndDelete(id, { new: true }).lean();
+    const menu = await Menu.findByIdAndUpdate(id, updateCriteria, { new: true }).lean();
     if (menu.imagePath) {
       await removeFile(menu.imagePath);
     }
