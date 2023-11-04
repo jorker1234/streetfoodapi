@@ -9,6 +9,7 @@ const schema = new mongoose.Schema(
     isActived: { type: Boolean, default: true },
     imagePath: { type: String },
     imageUrl: { type: String },
+    promptpay: { type: String, required: true },
   },
   { timestamps: true }
 );

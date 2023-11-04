@@ -1,4 +1,4 @@
-const generatePayload = require("promptpay-qr");
+const generatePromptPayData = require("promptpay-qr");
 const { ErrorBadRequest } = require("../configs/errors");
 
 const service = {
@@ -25,7 +25,7 @@ const service = {
 
   async generatePayload(receiveNumber, amount) {
     const receiver = this.getReceiveNumberFormat(receiveNumber);
-    return generatePayload(receiver, { amount });
+    return generatePromptPayData(receiver, { amount });
   },
 };
 

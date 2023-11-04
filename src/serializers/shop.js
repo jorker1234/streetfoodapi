@@ -5,7 +5,7 @@ module.exports = {
     return shops.map((shop) => {
       return {
         id: shop._id.toString(),
-        ..._.pick(shop, ["name", "phone", "receiveNumber", "imageUrl"]),
+        ..._.pick(shop, ["name", "phone", "receiveNumber", "imageUrl", "promptpay"]),
       };
     });
   },

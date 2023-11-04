@@ -36,8 +36,9 @@ const service = {
     return shop;
   },
 
-  async create({ name, receiveNumber, phone, imagePath, imageUrl }) {
+  async create({ name, receiveNumber, phone, imagePath, imageUrl, generatePromptpay, }) {
     const nameSearch = name.toLowerCase();
+    const promptpay = await generatePromptpay(receiveNumber, 0);
     const shop = await Shop.create({
       name,
       nameSearch,
@@ -45,11 +46,12 @@ const service = {
       phone,
       imagePath,
       imageUrl,
+      promptpay,
     });
     return shop;
   },
 
-  async update({ id, name, receiveNumber, phone, imagePath, imageUrl }) {
+  async update({ id, name, receiveNumber, phone, imagePath, imageUrl, generatePromptpay, }) {
     let updateCriteria = {
       name,
       receiveNumber,
@@ -57,6 +59,9 @@ const service = {
       imagePath,
       imageUrl,
     };
+    if(receiveNumber) {
+      updateCriteria.promptpay = await generatePromptpay(receiveNumber, 0);
+    }
     return await Shop.findOneAndUpdate({ _id: id }, updateCriteria, {
       upsert: true,
       new: true,
