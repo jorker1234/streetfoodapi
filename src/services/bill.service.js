@@ -10,7 +10,7 @@ const service = {
     keyword,
     skip = 0,
     limit = 10,
-    sort = { sequence: -1 },
+    sort = { updatedAt: -1 },
     status = null,
     projection = null,
   }) {
