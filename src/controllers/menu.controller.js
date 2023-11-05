@@ -82,6 +82,21 @@ const controller = {
       res.error(error);
     }
   },
+
+  async updateMaterial(req, res) {
+    try {
+      req.validate();
+      const { id, materialId } = req.params;
+      const param = { ...req.body, id, materialId };
+      const menu = await menuService.updateMaterial(param);
+      const menuOrderSerialized = await controller._serialize(null, null, [
+        menu,
+      ]);
+      res.success(menuOrderSerialized);
+    } catch (error) {
+      res.error(error);
+    }
+  },
 };
 
 module.exports = { ...controller };

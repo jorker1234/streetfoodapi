@@ -4,6 +4,7 @@ const validator = require("../../validators/material");
 const { jwtAuthenticate } = require("../authentication");
 
 router.get("/", validator.query, jwtAuthenticate, materialController.query);
+router.get("/menus/:menuId", validator.getByMenuId, jwtAuthenticate, materialController.getByMenuId);
 router.post("/", validator.create, jwtAuthenticate, materialController.create);
 router.put(
   "/:id",

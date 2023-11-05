@@ -38,17 +38,17 @@ const service = {
     return material;
   },
 
-  async getByIds(shopId, ids = []) {
+  async getByIds(shopId, ids = [], isValidate = true) {
     const uniqIds = _.uniq(ids);
     const materials = await Material.find({
       _id: uniqIds,
       shopId,
       isActived: true,
     }).lean();
-    if (!materials || uniqIds.length !== materials.length) {
+    if (isValidate && (!materials || uniqIds.length !== materials.length)) {
       throw ErrorNotFound("materials are not exists.");
     }
-    return menus;
+    return materials;
   },
 
   async create({ name, shopId, price, description, unit }) {

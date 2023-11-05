@@ -6,6 +6,7 @@ const shop = require("./shop");
 const order = require("./order");
 const bill = require("./bill");
 const material = require("./material");
+const menuMaterial = require("./menumaterial");
 
 router.use('/auth', auth);
 router.use('/users', user);
@@ -14,5 +15,6 @@ router.use("/shops", shop);
 router.use("/orders", order);
 router.use("/bills", bill);
 router.use("/materials", material);
+router.use("/menumaterials", menuMaterial);
 
 module.exports = router;

@@ -2,6 +2,7 @@ const { check } = require("express-validator");
 const shopService = require("../services/shop.service");
 const menuService = require("../services/menu.service");
 const orderService = require("../services/order.service");
+const materialService = require("../services/material.service");
 
 const shopIdIsExists = async (value) => {
   try {
@@ -24,6 +25,15 @@ const orderIdIsExists = async (value, options) => {
   try {
     const shopId = options.req.body?.shopId ?? options.req.query?.shopId ?? 0;
     return await orderService.getById(shopId, value);
+  } catch (error) {
+    throw error;
+  }
+};
+
+const materialIdIsExists = async (value, options) => {
+  try {
+    const shopId = options.req.body?.shopId ?? options.req.query?.shopId ?? 0;
+    return await materialService.getById(shopId, value);
   } catch (error) {
     throw error;
   }
@@ -94,6 +104,26 @@ module.exports = {
       .optional()
       .isFloat({ min: 1 })
       .withMessage("must be number and value greater than 0"),
+  ],
+
+  updateMaterial: [
+    check("shopId")
+      .notEmpty()
+      .withMessage("is empty")
+      .bail()
+      .custom(shopIdIsExists)
+      .withMessage("is not exists"),
+    check("materialId")
+      .notEmpty()
+      .withMessage("is empty")
+      .bail()
+      .custom(materialIdIsExists)
+      .withMessage("is not exists"),
+    check("quantity")
+      .notEmpty()
+      .withMessage("is empty")
+      .isFloat({ min: 0 })
+      .withMessage("must be number and value greater than or equal 0"),
   ],
 
   remove: [

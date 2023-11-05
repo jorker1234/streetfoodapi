@@ -1,5 +1,15 @@
 const mongoose = require("mongoose");
 
+const MaterialSchema = new mongoose.Schema(
+  {
+    materialId: { type: mongoose.Schema.Types.ObjectId, required: true },
+    quantity: { type: Number, required: true },
+    note: { type: String },
+    isActived: { type: Boolean, default: true },
+  },
+  { timestamps: true }
+);
+
 const schema = new mongoose.Schema(
   {
     name: { type: String, required: true },
@@ -11,6 +21,7 @@ const schema = new mongoose.Schema(
     isActived: { type: Boolean, default: true },
     imagePath: { type: String },
     imageUrl: { type: String },
+    materials: { type: [MaterialSchema], default: [] },
   },
   { timestamps: true }
 );

@@ -1,4 +1,5 @@
 const materialService = require("../services/material.service");
+const menuService = require("../services/menu.service");
 const materialSerializer = require("../serializers/material");
 
 const controller = {
@@ -7,6 +8,22 @@ const controller = {
       req.validate();
       const materials = await materialService.query(req.query);
       const materialSerialized = materialSerializer.serialize(materials);
+      res.success(materialSerialized);
+    } catch (error) {
+      res.error(error);
+    }
+  },
+
+  async getByMenuId(req, res) {
+    try {
+      req.validate();
+      const { menuId } = req.params;
+      const { shopId } = req.query;
+      const menu = await menuService.getById(shopId, menuId);
+      const menuMaterials = menu.materials ?? [];
+      const materialIds = menuMaterials.map((o) => o.materialId.toString());
+      const materials = await materialService.getByIds(shopId, materialIds, false);
+      const materialSerialized = materialSerializer.serialize(materials, menuMaterials);
       res.success(materialSerialized);
     } catch (error) {
       res.error(error);

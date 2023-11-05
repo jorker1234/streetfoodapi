@@ -88,6 +88,15 @@ module.exports = {
       .withMessage("must be between 1-100 characters"),
   ],
 
+  getByMenuId: [
+    check("shopId")
+      .notEmpty()
+      .withMessage("is empty")
+      .bail()
+      .custom(shopIdIsExists)
+      .withMessage("is not exists"),
+  ],
+
   remove: [
     check("shopId")
       .notEmpty()

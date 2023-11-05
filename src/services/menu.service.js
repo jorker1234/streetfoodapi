@@ -92,6 +92,49 @@ const service = {
     }
     return menu;
   },
+
+  async updateMaterial({ shopId, id, materialId, quantity, note }) {
+    const menu = await this.getById(shopId, id);
+    const material = _.find(
+      menu.materials,
+      (item) => item.materialId.toString() === materialId
+    );
+    if (!material && quantity === 0) {
+      return menu;
+    }
+
+    const searchCriteria = { _id: id, shopId };
+    let updateCriteria = null;
+    if (!material && quantity > 0) {
+      updateCriteria = {
+        $push: {
+          materials: {
+            materialId,
+            quantity,
+            note,
+          },
+        },
+      };
+    }
+    if (material && quantity > 0) {
+      searchCriteria["materials._id"] = material._id;
+      updateCriteria = {
+        $set: {
+          "materials.$.quantity": quantity,
+          "materials.$.note": note,
+        },
+      };
+    }
+    if (material && quantity === 0) {
+      updateCriteria = {
+        $pull: { materials: { _id: material._id } },
+      };
+    }
+
+    return await Menu.findOneAndUpdate(searchCriteria, updateCriteria, {
+      new: true,
+    });
+  },
 };
 
 module.exports = { ...service };
