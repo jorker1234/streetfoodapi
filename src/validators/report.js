@@ -1,5 +1,6 @@
 const { check } = require("express-validator");
 const shopService = require("../services/shop.service");
+const moment = require("moment");
 
 const shopIdIsExists = async (value) => {
   try {
@@ -7,6 +8,10 @@ const shopIdIsExists = async (value) => {
   } catch (error) {
     throw error;
   }
+};
+
+const dateValid = (value) => {
+    return moment(value, "YYYY-MM-DD").isValid();
 };
 
 module.exports = {
@@ -17,7 +22,15 @@ module.exports = {
       .bail()
       .custom(shopIdIsExists)
       .withMessage("is not exists"),
-    check("from").isISO8601().toDate().withMessage("Invalid day received"),
-    check("to").isISO8601().toDate().withMessage("Invalid day received"),
+    check("from")
+      .notEmpty()
+      .withMessage("is empty")
+      .custom(dateValid)
+      .withMessage("Invalid format (yyyy-mm-dd)"),
+    check("to")
+      .notEmpty()
+      .withMessage("is empty")
+      .custom(dateValid)
+      .withMessage("Invalid format (yyyy-mm-dd)"),
   ],
 };

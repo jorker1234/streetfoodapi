@@ -41,6 +41,7 @@ const schema = new mongoose.Schema(
     isActived: { type: Boolean, default: true },
     imagePath: { type: String },
     imageUrl: { type: String },
+    completedAt: { type: Date },
   },
   { timestamps: true }
 );

@@ -2,6 +2,7 @@ const _ = require("lodash");
 const ObjectId = require("mongoose").Types.ObjectId;
 const { Bill, BillStatus } = require("../models/Bill");
 const { ErrorNotFound, ErrorForbidden } = require("../configs/errors");
+const moment = require("moment");
 
 const service = {
   async query({
@@ -131,6 +132,9 @@ const service = {
     };
     if (status === BillStatus.CANCEL || status === BillStatus.REJECT) {
       updateCriteria.isActived = false;
+    }
+    if (status === BillStatus.COMPLETE) {
+      updateCriteria.completedAt = moment().toDate();
     }
     if (status === BillStatus.QUEUE) {
       const sequence = (await this.getLastSequence(shopId)) + 1;
