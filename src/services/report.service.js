@@ -4,6 +4,7 @@ const { Bill, BillStatus } = require("../models/Bill");
 
 const service = {
   async getSale({ shopId, menuId, from, to }) {
+    console.log("getSale", { shopId, menuId, from, to });
     const filter = {
       shopId,
       isActived: true,
