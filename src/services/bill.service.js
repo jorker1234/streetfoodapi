@@ -88,6 +88,7 @@ const service = {
     const billItems = items.map((item) => {
       const menu = menuDict[item.menuId];
       return {
+        menuId: item.menuId,
         name: menu.name,
         nameSearch: menu.nameSearch,
         price: menu.price,

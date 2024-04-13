@@ -7,6 +7,7 @@ const order = require("./order");
 const bill = require("./bill");
 const material = require("./material");
 const menuMaterial = require("./menumaterial");
+const report = require("./report");
 
 router.use('/auth', auth);
 router.use('/users', user);
@@ -16,5 +17,6 @@ router.use("/orders", order);
 router.use("/bills", bill);
 router.use("/materials", material);
 router.use("/menumaterials", menuMaterial);
+router.use("/reports", report);
 
 module.exports = router;
