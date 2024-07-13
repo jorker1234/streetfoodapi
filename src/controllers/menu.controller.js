@@ -71,8 +71,8 @@ const controller = {
     try {
       req.validate();
       const { id } = req.params;
-      const { shopId, orderId } = req.body;
-      const param = { ...req.body, id, removeFile: fileService.remove };
+      const { shopId, orderId } = req.query;
+      const param = { shopId, id, removeFile: fileService.remove };
       const menu = await menuService.remove(param);
       const menuOrderSerialized = await controller._serialize(shopId, orderId, [
         menu,
